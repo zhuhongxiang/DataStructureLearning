@@ -1,12 +1,12 @@
-package Stack;
+package stack;
 
 import java.util.EmptyStackException;
 import java.util.Scanner;
 
-public class ArrayStackDemo {
+public class LinkedStackDemo {
     public static void main(String[] args) {
         //测试栈的功能
-        ArrayStack stack = new ArrayStack(4);
+        LinkedStack stack = new LinkedStack();
         String key = "";
         boolean loop = true;//控制是否退出菜单
         Scanner scanner = new Scanner(System.in);
@@ -48,38 +48,32 @@ public class ArrayStackDemo {
 
     }
 
-    static class ArrayStack{
-        private int maxSize;
-        private int[] data;
-        private int top = -1;
+    static class LinkedStack {
+        private IntNode head;
+        private int count;
 
-        public ArrayStack(int maxSize){
-            this.maxSize = maxSize;
-            this.data = new int[this.maxSize];
+        public LinkedStack(){
+            head = null;
         }
 
-        //栈满
-        public boolean isFull(){
-            return top == maxSize-1;
-        }
         //栈空
         public boolean isEmpty(){
-            return top == -1;
+            return head == null;
         }
         //入栈
         public void push(int value){
-            if (isFull()){
-                System.out.println("栈满，无法入栈！");
-                return;
-            }
-            data[++top] = value;
+            count++;
+            head = new IntNode(value,head);
         }
         //出栈
         public int pop(){
             if (isEmpty()){
                 throw new EmptyStackException();
             }
-            return data[top--];
+            int value = head.getValue();
+            head = head.getNext();
+            count--;
+            return value;
         }
         //遍历
         public void show(){
@@ -87,9 +81,46 @@ public class ArrayStackDemo {
                 System.out.println("栈空，没有数据~~");
                 return;
             }
-            for (int i = top;i>=0;i--){
-                System.out.printf("Stack[%d] = %d \n",i,data[i]);
+            int num = count;
+            IntNode cursor = head;
+            while (cursor != null){
+                System.out.printf("Stack[%d] = %d \n",num,cursor.getValue());
+                num--;
+                cursor = cursor.getNext();
             }
+        }
+    }
+    static class IntNode{
+        private int value;
+        private IntNode next;
+
+        public IntNode(int value,IntNode next) {
+            this.value = value;
+            this.next = next;
+        }
+
+        public void setValue(int value) {
+            this.value = value;
+        }
+
+        public void setNext(IntNode next) {
+            this.next = next;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public IntNode getNext() {
+            return next;
+        }
+
+        @Override
+        public String toString() {
+            return "IntNode{" +
+                    "value=" + value +
+                    ", next=" + next +
+                    '}';
         }
     }
 }
